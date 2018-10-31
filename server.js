@@ -28,7 +28,7 @@ server.use('/',buyerMainRouter);
 
 
 new Promise((resolve,reject)=>{
-    mongoose.connect('mongodb://localhost:27017',{useNewUrlParser:true},(error)=>{
+    mongoose.connect('mongodb://localhost:27017',{useNewUrlParser:true, dbName: 'test'},(error)=>{
         if(error){
             console.log('数据库连接失败')
         }else{
