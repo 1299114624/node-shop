@@ -1,6 +1,8 @@
 const express = require('express');
 const Cookies = require('cookies');
 const seller = require('../../handleDB/handleSeller');
+const goods = require('../../handleDB/handleGoods');
+
 
 //创建路由对象
 const router = new express.Router();
@@ -42,9 +44,18 @@ router.use((req,res,next)=>{
 
 //商品管理
 router.get('/goods/list',(req,res)=>{
-    res.render('seller/goodsList',{
-        activeIndex:0
-    });
+
+    //查询这个商家的商品
+    let id = req.sellerId;
+    goods.findAllGoodsBySeller(id)
+    .then((result)=>{
+        // console.log(result);
+        //渲染页面
+        res.render('seller/goodsList',{
+            activeIndex:0,
+            goodsList: result
+        });
+    })
 })
 
 //订单列表
@@ -68,7 +79,30 @@ router.get('/add/goods',(req,res)=>{
 
 //修改商品
 router.get('/modify/goods',(req,res)=>{
-    res.render('seller/modifyGoods');
+    //查询原来的商品
+    let goodsid = req.query.goodsid;
+    res.render('seller/addGoods',{goodsid});
 })
+
+//删除商品
+router.get('/delete/goods',(req,res)=>{
+    //查询商品id
+    let goodsid = req.query.goodsid;
+    //操作数据库,删除商品
+    goods.deleteGoodsByid(goodsid)
+    .then(()=>{
+        res.redirect('/seller/goods/list');
+    })
+})
+
+//退出
+router.get('/logout',(req,res)=>{
+    let cookies = new Cookies(req,res);
+    cookies.set('SELLERID',null);
+    res.redirect('/seller/login');
+})
+
+
+
 
 module.exports = router;

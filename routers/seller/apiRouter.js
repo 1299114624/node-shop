@@ -3,6 +3,7 @@ const multiparty = require('multiparty');
 const bodyParser = require('body-parser');
 const seller = require('../../handleDB/handleSeller');
 const Cookies = require('cookies');
+const goods = require('../../handleDB/handleGoods');
 
 //创建路由对象
 const router = new express.Router();
@@ -103,6 +104,54 @@ router.post('/login',(req,res)=>{
 
 
 
+})
+
+//添加商品
+router.post('/add/goods',(req,res)=>{
+    //解析请求的参数
+    let form = new multiparty.Form({
+        uploadDir:'static/images'
+    });
+    form.parse(req,(error,fields,files)=>{
+        // console.log(fields,files)
+        let name = fields.name.length>0? fields.name[0]:'';
+        let price = fields.name.length>0? fields.price[0]:'';
+        let description = fields.name.length>0? fields.description[0]:'';
+        let count = fields.name.length>0? fields.count[0]:'';
+
+        let images = files.images.length>0?files.images.map(item=>('/'+item.path)):'';
+        let id = new Cookies(req,res).get('SELLERID');
+        // 判断是否为空
+        if(!name || !price || !description || !count || !images){
+            res.json({
+                status:1,
+                message: '输入不能为空'
+            })
+        }
+        // 保存商品数据
+        goods.saveGoodsInfo({
+            goodsname:name,
+            description,
+            price,
+            count,
+            images,
+            seller:id
+        })
+        .then(()=>{
+            res.json({
+                status:0,
+                message:'保存成功'
+            })
+        })
+        .catch(()=>{
+            res.json({
+                status:2,
+                message:'数据库问题,保存失败'
+            })
+        })
+
+
+    })
 })
 
 

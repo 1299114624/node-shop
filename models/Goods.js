@@ -4,7 +4,7 @@ const schema = new mongoose.Schema({
     goodsname: String,
     description: String,
     price: Number,
-    images: String,
+    images: Array,
     count: Number,
     seller: {
         type: mongoose.SchemaTypes.ObjectId,

@@ -6,9 +6,40 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="/public/boots/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
     <%- include('./header.html') %>
     <h1>商品管理</h1>
+    <a href="/seller/add/goods" class="btn btn-success">+</a>
+    <table class="table container">
+        <tr>
+            <th>商品名称</th>  
+            <th>价格</th>
+            <th>详情</th>
+            <th>缩略图</th>
+            <th>库存</th>
+            <th>操作</th>
+        </tr>
+        <%for(var i=0; i< goodsList.length; i++){%>
+            <tr>
+                <td><%=goodsList[i].goodsname%></td>
+                <td><%=goodsList[i].price%></td>
+                <td><%=goodsList[i].description%></td>
+                <td>
+                    <img src="<%=goodsList[i].images[0]%>" width="100">
+                </td>
+                <td>
+                    <%=goodsList[i].count%>
+                </td>
+                <td>
+                    <a href="/seller/delete/goods?goodsid=<%=goodsList[i]._id%>" class="btn btn-danger">删除</a>
+                    <a href="/seller/modify/goods?goodsid=<%=goodsList[i]._id%>" class="btn btn-warning">修改</a>
+                </td>
+            </tr>
+        <%}%>
+
+
+    </table>
 </body>
 </html>

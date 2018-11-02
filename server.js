@@ -13,6 +13,7 @@ const server = express();
 
 //处理静态资源
 server.use('/public',express.static('./static'))
+server.use('/static',express.static('./static'))
 
 //处理ajax
 server.use('/api',buyerApiRouter);
